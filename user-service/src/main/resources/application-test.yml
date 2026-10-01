@@ -1,0 +1,5 @@
+# Test profile: enables /test/** (reset, seed, clock pin, bug switches).
+# Never run this profile in production: anyone could wipe the data.
+logging:
+  level:
+    com.userlab: DEBUG

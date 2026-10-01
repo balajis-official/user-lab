@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="brand">User Lab</h1>
+    <div class="env" id="env" aria-live="polite">Checking test controls…</div>
+  </header>
+
+  <nav class="nav" aria-label="Sections">
+    <button class="nav-item" data-view="list" aria-current="page">Users</button>
+    <button class="nav-item" data-view="create">New user</button>
+    <button class="nav-item" data-view="reference">API reference</button>
+    <button class="nav-item" data-view="controls">Test controls</button>
+  </nav>
+
+  <main class="main" id="main" tabindex="-1"></main>
+
+  <aside class="log" aria-label="Request log">
+    <div class="log-head">
+      <h2>Request log</h2>
+      <button class="link-btn" id="clear-log">Clear</button>
+    </div>
+    <p class="log-hint">Every call this page makes, newest first. Open one to see headers and bodies.</p>
+    <ol class="log-list" id="log-list"></ol>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+target/
+node_modules/
+*.log
+.idea/
+*.iml
+.vscode/
+.DS_Store
+.env
+.github/modernize/
