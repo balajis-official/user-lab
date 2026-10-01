@@ -10,6 +10,22 @@ jobs:
   java-restassured:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: user_db
+          POSTGRES_USER: agri
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        ports: 
+          - 5432:5432
+        options:
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+
     steps:
       - name: "Checkout from repo"
         uses: actions/checkout@v7
@@ -20,6 +36,19 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: maven
+
+      - name: "Package the jar file"
+        working-directory: user-service
+        run: mvn package -DskipTests
+
+      - name: "Run the service in the background"
+        working-directory: user-service
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+        run: java -jar target/user-service-0.1.0.jar > service.log 2>&1 &
+
+      - name: "Wait for the service to start"
+        run: sleep 30
 
       - name: "Execute the test"
         env:
