@@ -1,10 +1,9 @@
 name: CI
 
 on:
-  push: 
+  push:
     branches: [main]
   workflow_dispatch:
-
 
 jobs:
   java-restassured:
@@ -17,14 +16,12 @@ jobs:
           POSTGRES_DB: user_db
           POSTGRES_USER: agri
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        ports: 
+        ports:
           - 5432:5432
-        options:
-          --health-cmd "pg_isready -U agri -d user_db"
+        options: --health-cmd "pg_isready -U agri -d user_db"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
 
     steps:
       - name: "Checkout from repo"
@@ -44,11 +41,22 @@ jobs:
       - name: "Run the service in the background"
         working-directory: user-service
         env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: java -jar target/user-service-0.1.0.jar > service.log 2>&1 &
 
       - name: "Wait for the service to start"
-        run: curl -sf http://localhost:8080/actuator/health
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080/actuator/health > /dev/null; then 
+              echo "Service is up after $i tries"
+              exit 0                                 
+            fi
+              echo "Try $i: not ready yet"
+              sleep 2                                      
+            done
+            echo "Service did not start in 60 seconds"
+            cat user-service/service.log 
+            exit 1
 
       - name: "Execute the test"
         env:
