@@ -7,6 +7,11 @@ on:
 
 jobs:
   java-restassured:
+
+    strategy:
+      matrix:
+        target_env: [dev, qa, stage]
+
     runs-on: ubuntu-latest
 
     services:
@@ -61,5 +66,5 @@ jobs:
       - name: "Execute the test"
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        working-directory: api-tests
-        run: mvn test -Denv=dev
+        working-directory: api-tests  
+        run: mvn test -Denv=${{matrix.target_env}}
