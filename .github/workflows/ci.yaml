@@ -22,5 +22,7 @@ jobs:
           cache: maven
 
       - name: "Execute the test"
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         working-directory: api-tests
         run: mvn test -Denv=dev
